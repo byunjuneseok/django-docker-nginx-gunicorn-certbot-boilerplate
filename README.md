@@ -10,9 +10,20 @@ A boilerplate app with nginx, gunicorn and certbot(Let's encrypt).
 * **"NO WINDOWS OS" 👋**
 
 ## 🕹Getting Started
+To test the boilerplate, type just one command with one flag.
+```
+$ ./start.sh -t
+``` 
+or 
+```
+$ ./start.sh --test
+```
+
+
 To get up and running, simply do the following...
 ```
-$ Please input your django project name.
+$ ./start.sh
+Please input your django project name.
 <your-project-name>
 ```
 ```
