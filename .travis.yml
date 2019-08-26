@@ -1,5 +1,8 @@
 language: python
-
+python:
+  - "3.7"
+install:
+  - pip install -r ./scripts/requirements.txt
 matrix:
   include:
     - name: Test Docker based on Ubuntu 18.04 LTS 
