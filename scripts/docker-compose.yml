@@ -1,0 +1,31 @@
+version: "3"
+services:
+  nginx:
+    image: nginx:1.17
+    container_name: ngx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ../static_files:/static_files
+      - ../media:/media:rw
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    depends_on:
+      - app
+  app:
+    build: .
+    container_name: django-gunicorn
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../static_files:/static_files
+      - ../media:/src/media:rw
+    command: bash -c "python manage.py collectstatic --no-input && python manage.py makemigrations && python manage.py migrate && gunicorn --bind=0.0.0.0:8000 app.wsgi:application"
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
