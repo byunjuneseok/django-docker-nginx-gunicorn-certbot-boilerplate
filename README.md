@@ -1,4 +1,4 @@
-# ⛴django Boilerplate with nginx, gunicorn and certbot
+# ⛴ django boilerplate with nginx, gunicorn and certbot
 A boilerplate app with nginx, gunicorn and certbot(Let's encrypt).
 
 ## Requirements
@@ -6,7 +6,7 @@ A boilerplate app with nginx, gunicorn and certbot(Let's encrypt).
 * `docker`
 * `docker-compose`
 * `macOS` : without `certbot`
-* `linux` : `certbot` is available.
+* `linux` : 🤖`certbot` is available.
 * **"NO WINDOWS OS" 👋**
 
 ## 🕹Getting Started
