@@ -1,9 +1,4 @@
 TEST_FLAG=0
-function insertAfter # file line newText
-{
-   local file="$1" line="$2" newText="$3"
-   sed -i -e "/^$line$/a"$'\\\n'"$newText"$'\n' "$file"
-}
 
 for arg in "$@"
 do
