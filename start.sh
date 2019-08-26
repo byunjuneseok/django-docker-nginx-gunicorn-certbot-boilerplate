@@ -36,7 +36,7 @@ if [ $TEST_FLAG = 1 ]; then
     cp ./scripts/docker-compose-wo-certbot.yml ./docker-compose.yml
     mkdir nginx
     cp ./scripts/nginx-wo-certbot.conf ./nginx/nginx.conf
-    docker-compose up app nginx
+    docker-compose up --build
 else
     while true; do
         read -p "Do you wish to use the certbot for https? [y/n]" yn
