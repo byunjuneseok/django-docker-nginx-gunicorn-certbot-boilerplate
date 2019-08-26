@@ -1,4 +1,9 @@
 TEST_FLAG=0
+function insertAfter # file line newText
+{
+   local file="$1" line="$2" newText="$3"
+   sed -i -e "/^$line$/a"$'\\\n'"$newText"$'\n' "$file"
+}
 
 for arg in "$@"
 do
@@ -27,13 +32,17 @@ fi
 django-admin startproject $projectname
 mv $projectname app
 cp ./scripts/requirements.txt ./app/requirements.txt
-echo "STATIC_ROOT = os.path.join(ROOT_DIR, 'static_files')" >> ./app/$projectname/settings.py
-echo "ROOT_DIR = os.path.dirname(BASE_DIR)" >> ./app/$projectname/settings.py
 
-# Step for docker-compose
-# Creating Project
+head -n 16 ./app/$projectname/settings.py > ./app/$projectname/settings1.py
+echo "ROOT_DIR = os.path.dirname(BASE_DIR)" >> ./app/$projectname/settings1.py
+tail -n +17 ./app/$projectname/settings.py >> ./app/$projectname/settings1.py
+echo "STATIC_ROOT = os.path.join(ROOT_DIR, 'static_files')" >> ./app/$projectname/settings1.py
+rm ./app/$projectname/settings.py
+mv ./app/$projectname/settings1.py ./app/$projectname/settings.py
+
 if [ $TEST_FLAG = 1 ]; then
     cp ./scripts/docker-compose-wo-certbot.yml ./docker-compose.yml
+    python3 scripts/generate_docker_compose_yml.py $projectname
     mkdir nginx
     cp ./scripts/nginx-wo-certbot.conf ./nginx/nginx.conf
     docker-compose up --build
@@ -42,15 +51,17 @@ else
         read -p "Do you wish to use the certbot for https? [y/n]" yn
         case $yn in
             [Yy]* ) cp ./scripts/docker-compose.yml ./docker-compose.yml;
+                    python3 scripts/generate_docker_compose_yml.py $projectname
                     mkdir nginx;
                     cp ./scripts/nginx.conf ./nginx/nginx.conf;
                     sudo ./init-letsencrypt.sh; 
                     break;;
 
             [Nn]* ) cp ./scripts/docker-compose-wo-certbot.yml ./docker-compose.yml;
+                    python3 scripts/generate_docker_compose_yml.py $projectname
                     mkdir nginx;
                     cp ./scripts/nginx-wo-certbot.conf ./nginx/nginx.conf;
-                    docker-compose up app nginx;
+                    docker-compose up --build;
                     break;;
 
             * ) echo "Please answer yes or no.";;
